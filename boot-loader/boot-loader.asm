@@ -7,7 +7,7 @@ SECTION .text
 ; This handles BIOS variants that load to 0000:7C00 instead of 07C0:0000.
 jmp 0x07c0:START
 
-TOTALSECTORCOUNT: dw 1024
+TOTALSECTORCOUNT: dw 1
 
 START:
     mov ax, 0x07c0

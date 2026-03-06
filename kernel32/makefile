@@ -1,7 +1,7 @@
-all: virtual-os.bin
+all: kernel32.bin
 
-virtual-os.bin: virtual-os.asm
-	nasm -o virtual-os.bin virtual-os.asm
+kernel32.bin: src/entrypoint.s
+	nasm -o kernel32.bin $<
 
 clean:
-	rm -f virtual-os.bin
+	rm -f kernel32.bin

@@ -24,12 +24,12 @@ kernel32:
 	@echo ============== Build Complete ==============
 	@echo
 
-disk.img: boot-loader kernel32
+disk.img: boot-loader/boot-loader.bin kernel32/kernel32.bin
 	@echo
 	@echo ============== Disk Image Build Start ==============
 	@echo
 
-	cat boot-loader/boot-loader.bin kernel32/virtual-os.bin > disk.img
+	cat $^ > disk.img
 	truncate -s 1474560 disk.img
 
 	@echo
