@@ -9,6 +9,19 @@ START:
     mov ds, ax
     mov es, ax
 
+    mov ax, 0x2401 ; A20 gate active
+    int 0x15 ; with BIOS interrupt service
+
+    jc .A20GATEERROR
+    jmp .A20GATESUCCESS
+
+.A20GATEERROR
+    in al, 0x92 ; read system control port
+    or al, 0x02 ; set A20 gate bit in 1
+    and al, 0xFE
+    out 0x92, al ; write system control port
+
+.A20GATESUCCESS
     cli
     lgdt [ GDTR ]
 
