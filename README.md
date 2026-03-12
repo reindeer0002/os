@@ -1,5 +1,5 @@
 # os
-60일 os 개발 프로젝트
+os development project
 
 # QEMU instruction
 ```bash
