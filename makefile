@@ -29,8 +29,7 @@ disk.img: boot-loader/boot-loader.bin kernel32/kernel32.bin
 	@echo ============== Disk Image Build Start ==============
 	@echo
 
-	cat $^ > disk.img
-	truncate -s 1474560 disk.img
+	./image-maker $^
 
 	@echo
 	@echo ============== All Build Complete ==============

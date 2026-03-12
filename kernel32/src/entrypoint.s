@@ -35,7 +35,7 @@ PROTECTEDMODE:
     call PRINTMESSAGE
     add esp, 12
 
-    jmp $
+    jmp dword 0x08: 0x10200 ; jump to starting point of C based kernel
 
 PRINTMESSAGE:
     push ebp
