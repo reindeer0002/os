@@ -57,3 +57,5 @@ dkms.conf
 
 *.bin
 *.img
+
+/image-maker
