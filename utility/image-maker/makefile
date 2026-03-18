@@ -1,4 +1,4 @@
-all: ../../image-maker
+all: image-maker
 
 image-maker: image-maker.c
 	gcc -o $@ $<
