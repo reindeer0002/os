@@ -12,7 +12,7 @@ prepare:
 	mkdir -p $(OBJECTDIRECTORY)
 
 $(OBJECTDIRECTORY)/entrypoint.bin: $(SOURCEDIRECTORY)/entrypoint.s
-	$(NASM32) -o $@ $<
+	$(NASM32) -f bin -o $@ $<
 
 dep:
 	@echo === Make Dependency File ===
@@ -42,7 +42,7 @@ ASSEMBLYOBJECTFILES = $(notdir $(patsubst %.asm, %.o, $(ASSEMBLYSOURCEFILES)))
 	$(GCC32) -c $<
 
 %.o: ../$(SOURCEDIRECTORY)/%.asm
-	$(NASM32) -f elf32 -o $<
+	$(NASM32) -f elf32 $< -o $@
 
 internal-dependency:
 	$(GCC32) -MM $(CSOURCEFILES) > dependency.dep

@@ -4,12 +4,16 @@
 
 #include "types.h"
 #include "page.h"
+#include "mode-switch.h"
 
 void kPrintString(int iX, int iY, const char* pcString);
 BOOL kInitializeKernel64Area();
 BOOL kIsMemoryEnough();
 
 void main() {
+    DWORD dwEAX, dwEBX, dwECX, dwEDX;
+    char vcVendorString[13] = { 0 };
+
     kPrintString(0, 3, "C Language Kernel Started.");
     kPrintString(0, 4, "Minimum Memory Size Check.");
     if(kIsMemoryEnough() == FALSE) {
@@ -31,6 +35,24 @@ void main() {
     kInitializePageTables();
     kPrintString(45, 6, "PASS");
 
+    kReadCPUID(0, &dwEAX, &dwEBX, &dwECX, &dwEDX);
+    *(DWORD*) vcVendorString = dwEBX;
+    *((DWORD*)vcVendorString + 1) = dwEDX;
+    *((DWORD*)vcVendorString + 2) = dwECX;
+    kPrintString(0, 7, "CPU Vendor String : ");
+    kPrintString(45, 7, vcVendorString);
+
+    kReadCPUID(0x80000001, &dwEAX, &dwEBX, &dwECX, &dwEDX);
+    kPrintString(0, 8, "64bit Mode Support Check : ");
+    if(dwEDX & ( 1 << 29 )) {
+        kPrintString(45, 8, "PASS");
+    } else {
+        kPrintString(45, 8, "FAIL");
+        kPrintString(0, 9, "64bit Mode Not Supported.");
+        while(1);
+    }
+
+    kPrintString(0, 9, "Switch To 64bit Mode");
     while(1);
 }
 
