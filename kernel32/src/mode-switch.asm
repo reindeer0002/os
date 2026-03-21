@@ -66,7 +66,7 @@ kSwitchAndExecute64bitKernel:
     mov cr0, eax
 
     ; jump to kernel cs selector
-    jmp 0x08:0x2000000
+    jmp 0x08:0x200000
 
     ; this code is not executed
     jmp $
