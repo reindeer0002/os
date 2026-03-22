@@ -1,5 +1,4 @@
 #include "types.h"
-#include "assembly-utility.h"
 #include "keyboard.h"
 
 BOOL kIsOutputBufferFull() {

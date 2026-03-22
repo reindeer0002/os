@@ -2,6 +2,7 @@
 #define __KEYBOARD_H__
 
 #include "types.h"
+#include "assembly-utility.h"
 
 #define KEY_SKIPCOUNTFORPAUSE       2
 
