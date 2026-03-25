@@ -61,5 +61,5 @@ clean:
 	make -C boot-loader clean
 	make -C kernel32 clean
 	make -C kernel64 clean
-	make -C utility clean
+#	make -C utility clean
 	rm -f disk.img
