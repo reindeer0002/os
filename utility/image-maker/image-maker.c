@@ -11,6 +11,8 @@
 #include <errno.h>
 
 #define BYTESOFSECTOR 512
+#define FLOPPY144_TOTALSECTORS 2880
+#define FLOPPY144_TOTALSIZE (FLOPPY144_TOTALSECTORS * BYTESOFSECTOR)
 
 int AdjustInSectorSize(int iFd, int iSourceSize);
 void WriteKernelInformation(int iTargetFd, int iTotalKernelSectorCount, int iKernel32SectorCount);
@@ -72,6 +74,18 @@ int main(int argc, char* argv[]) {
 
     printf("[INFO] Start to write kernel information\n");
     WriteKernelInformation(iTargetFd, iKernel32SectorCount + iKernel64SectorCount, iKernel32SectorCount);
+
+    int iCurrentSize = (1 + iKernel32SectorCount + iKernel64SectorCount) * BYTESOFSECTOR;
+    if(iCurrentSize < FLOPPY144_TOTALSIZE) {
+        int iPadSize = FLOPPY144_TOTALSIZE - iCurrentSize;
+        char cCh = 0x00;
+        lseek(iTargetFd, 0, SEEK_END);
+        for(int i = 0; i < iPadSize; i++) {
+            write(iTargetFd, &cCh, 1);
+        }
+        printf("[INFO] Padded to 1.44MB floppy size (%d bytes)\n", FLOPPY144_TOTALSIZE);
+    }
+
     printf("[INFO] Image file create complete\n");
 
     close(iTargetFd);
