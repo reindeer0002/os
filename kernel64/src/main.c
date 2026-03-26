@@ -6,6 +6,7 @@
 #include "keyboard.h"
 #include "utility.h"
 #include "descriptor.h"
+#include "pic.h"
 
 void main() {
     char vcTemp[2] = {0};
@@ -39,13 +40,19 @@ void main() {
         while(1);
     }
 
+    kPrintString(0, 16, "PIC Controller And Interrupt Initialize.");
+    kInitializePIC();
+    kMaskPICInterrupt(0);
+    kEnableInterrupt();
+    kPrintString(45, 16, "PASS");
+
     int i = 0;
     while(1) {
         if(kIsOutputBufferFull()) {
             bTemp = kGetKeyboardScanCode();
             if(kConvertScanCodeToASCIICode(bTemp, &(vcTemp[0]), &bFlags)) {
                 if(bFlags & KEY_FLAGS_DOWN) {
-                    kPrintString(i++, 16, vcTemp);
+                    kPrintString(i++, 17, vcTemp);
                     if(vcTemp[0] == '0') {
                         bTemp = bTemp / 0;
                     }
