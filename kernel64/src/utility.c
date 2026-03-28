@@ -1,4 +1,5 @@
 #include "utility.h"
+#include "assembly-utility.h"
 
 void kMemSet(void* pvDestination, BYTE bData, int iSize) {
     for (int i = 0; i < iSize; i++) {
@@ -22,6 +23,21 @@ int kMemCmp(const void* pvDestination, const void* pvSource, int iSize) {
         }
     }
     return 0;
+}
+
+BOOL kSetInterruptFlag(BOOL bEnableInterrupt) {
+    QWORD qwRFLAGS;
+    qwRFLAGS = kReadRFLAGS();
+    if (bEnableInterrupt) {
+        kEnableInterrupt();
+    } else {
+        kDisableInterrupt();
+    }
+
+    if (qwRFLAGS & 0x0200) {
+        return TRUE;
+    }
+    return FALSE;
 }
 
 void kPrintString(int iX, int iY, const char* pcString) {
