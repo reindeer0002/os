@@ -7,54 +7,61 @@
 #include "utility.h"
 #include "descriptor.h"
 #include "pic.h"
+#include "console.h"
+#include "console-shell.h"
 
 void main() {
     char vcTemp[2] = {0};
     BYTE bFlags;
     BYTE bTemp;
     KEYDATA stData;
-    kPrintString(0, 10, "Switch To IA-32e Mode Success.");
-    kPrintString(0, 11, "IA-32e C language Kernel Start.");
 
-    kPrintString(0, 12, "GDT Initialize And Switch For IA-32e Mode.");
+    int iCursorX, iCursorY;
+    kInitializeConsole(0, 10);
+    kPrintf("Switch To IA-32e Mode Success.\n");
+    kPrintf("IA-32e C language Kernel Start.\n");
+    kPrintf("Initialize Console.");
+
+    kGetCursor(&iCursorX, &iCursorY);
+    kPrintf("GDT Initialize And Switch For IA-32e Mode.\n");
     kInitializeGDTTableAndTSS();
     kLoadGDTR(GDTR_STARTADDRESS);
-    kPrintString(45, 12, "PASS");
+    kSetCursor(45, iCursorY++);
+    kPrintf("PASS\n");
 
-    kPrintString(0, 13, "TSS Segment Load");
+    kPrintf("TSS Segment Load.\n");
     kLoadTR(GDT_TSSSEGMENT);
-    kPrintString(45, 13, "PASS");
+    kSetCursor(45, iCursorY++);
+    kPrintf("PASS\n");
 
-    kPrintString(0, 14, "IDT Initialize");
+    kPrintf("IDT Initialize.\n");
     kInitializeIDTTables();
     kLoadIDTR(IDTR_STARTADDRESS);
-    kPrintString(45, 14, "PASS");
+    kSetCursor(45, iCursorY++);
+    kPrintf("PASS\n");
 
-    kPrintString(0, 15, "Keyboard Activate And Queue Initialize");
+    kPrintf("Total RAM Size Check.\n");
+    kCheckTotalRAMSize();
+    kSetCursor(45, iCursorY++);
+    kPrintf("PASS, Size = %d MB\n", kGetTotalRAMSize());
+
+    kPrintf("Keyboard Activate And Queue Initialize.\n");
     if(kInitializeKeyboard()) {
-        kPrintString(45, 15, "PASS");
+        kSetCursor(45, iCursorY++);
+        kPrintf("PASS\n");
         kChangeKeyboardLED(FALSE, FALSE, FALSE);
     } else {
-        kPrintString(45, 15, "FAIL");
+        kSetCursor(45, iCursorY++);
+        kPrintf("FAIL\n");
         while(1);
     }
 
-    kPrintString(0, 16, "PIC Controller And Interrupt Initialize.");
+    kPrintf("PIC Controller And Interrupt Initialize.\n");
     kInitializePIC();
     kMaskPICInterrupt(0);
     kEnableInterrupt();
-    kPrintString(45, 16, "PASS");
+    kSetCursor(45, iCursorY++);
+    kPrintf("PASS\n");
 
-    int i = 0;
-    while(1) {
-        if(kGetKeyFromKeyQueue(&stData)) {
-            if(stData.bFlags & KEY_FLAGS_DOWN) {
-                vcTemp[0] = stData.bASCIICode;
-                kPrintString(i++, 17, vcTemp);
-                if(vcTemp[0] == '0') {
-                    bTemp = bTemp / 0;
-                }
-            }
-        }
-    }
+    kStartConsoleShell();
 }
